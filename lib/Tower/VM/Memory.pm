@@ -1,6 +1,8 @@
-package Tower::VM::Memory;
+# Memory.pm
+# Copyright (c) 2012 terrencehan
+# hanliang1990@gmail.com
 
-use Tower::Tool::Complement qw/to_decimal/;
+package Tower::VM::Memory;
 
 sub new{
     $class = shift;
@@ -14,39 +16,34 @@ sub new{
     return bless \%mem, $class;
 }
 
-sub get_size{ return shift->{size}; }
+sub get_config_size{ return shift->{size}; }
 
 sub clear{ shift->{buf} = []; }
 
+sub write_arr($$@){
+    #arguments:
+    # $postion $len $data
+    my $self = shift;
+    my ($pos, $len, @data) = @_;
+    my $factor = $self->{factor};
+    @{$self->{buf}}[$pos * $factor .. $pos * $factor + $len * $factor -1] = @data;
+}
 
-sub get_area($$){
-    #given a start position and a length, return a segment of  mem array;
-    my $self		= shift;
+sub write_str($$$){
+    #arguments:
+    # $postion $len $data_str
+    my $self = shift;
+    my ($pos, $len, $data_str) = @_;
+    $self->write_arr($pos, $len, (split //, $data_str));
+}
+
+sub read($$){
+    #arguments:
+    # $postion $len $data_str
+    my $self        = shift;
+    my ($pos, $len) = @_;
     my $factor 		= $self->{factor};
-    my ($pos, $len) = @_;
     return @{$self->{buf}}[$pos * $factor .. $pos * $factor + $len * $factor - 1];
-}
-
-sub get_val($$){
-    #arguments:
-    #   $pos
-    #   n = $len
-    #get the value in decimal form of n bytes at the beginning of pos
-    my $self		= shift;
-    my ($pos, $len) = @_;
-    return to_decimal(join "", $self->get_area($pos, $len));
-}
-
-sub put_val_in_4bytes($$){
-    #arguments:
-    #   $pos $val
-    #   put the complement of $val in 4 bytes
-    my $self		= shift;
-    my $factor		= $self->{factor};
-    my ($pos, $val)	= @_;
-    my $str	 = sprintf "%.8x", $val;
-    $str	 = substr($str, 8) if length($str) > 8;
-    @{$self->{buf}}[$pos * $factor .. $pos * $factor + $self->{scalar_len} * $factor -1] = (split //, $str);
 }
 
 sub get_mem{
@@ -54,13 +51,5 @@ sub get_mem{
     my $self =  shift;
     return $self->{buf};
 }
-
-sub show{
-    #print @mem within a line
-    $self = shift;
-    print @{$self->{buf}};
-    print "\n";
-}
-
 
 1;
