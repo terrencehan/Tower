@@ -47,9 +47,9 @@ sub read($$){
 }
 
 sub get_mem{
-    #return the whole $mem
+    #return the whole $mem in an array
     my $self =  shift;
-    return $self->{buf};
+    return @{$self->{buf}};
 }
 
 1;
