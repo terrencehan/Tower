@@ -1,4 +1,4 @@
-# Helper.pm
+# VM/Memory/Helper.pm
 # Copyright (c) 2012 terrencehan
 # hanliang1990@gmail.com
 
@@ -6,33 +6,41 @@ package Tower::VM::Memory::Helper;
 
 use Tower::Tool::Complement qw/to_decimal/;
 
+@ISA = qw/Exporter/;
 
-sub get_val($$){
+@EXPORT_OK = qw/get_val put_val_in_4bytes/;
+
+sub get_val{
     #arguments:
-    #   $pos
+    #   $mem memory object
+    #   $pos address of first byte 
     #   n = $len
     #get the value in decimal form of n bytes at the beginning of pos
-    my $self		= shift;
-    my ($pos, $len) = @_;
-    return to_decimal(join "", $self->get_area($pos, $len));
+    my ($mem, $pos, $len) = @_;
+    return to_decimal(join "", $mem->read($pos, $len));
 }
 
-sub put_val_in_4bytes($$){
+sub _put_val{
+    #internal fuction
+    my ($mem, $pos, $val, $bytes)	= @_;
+    my $len = $bytes * 2;
+    my $factor		= $mem->{factor};
+    my $str	 = sprintf "%.${len}x", $val;
+    $str	 = substr($str, $len) if length($str) > $len;
+    @{$mem->{buf}}[$pos * $factor .. $pos * $factor + $len * $factor -1] = (split //, $str);
+}
+
+sub put_val_in_4bytes{
     #arguments:
+    #   $mem memory object
     #   $pos $val
     #   put the complement of $val in 4 bytes
-    my $self		= shift;
-    my $factor		= $self->{factor};
-    my ($pos, $val)	= @_;
-    my $str	 = sprintf "%.8x", $val;
-    $str	 = substr($str, 8) if length($str) > 8;
-    @{$self->{buf}}[$pos * $factor .. $pos * $factor + $self->{scalar_len} * $factor -1] = (split //, $str);
+    my ($mem, $pos, $val)	= @_;
+    _put_val($mem, $pos, $val, 4);
 }
 
-sub get_mem{
-    #return the whole $mem
-    my $mem =  shift;
-    return $mem->{buf};
+sub put_val_in_2bytes{
+    # umimplement
 }
 
 sub show_mem{

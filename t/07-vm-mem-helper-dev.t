@@ -5,67 +5,50 @@ use lib '../lib';
 use Test::Base;
 use Test::More 'no_plan';
 use Test::Deep;
+use Tower::VM::Memory;
 
-BEGIN { use_ok ('Tower::VM::Memory'); };
+BEGIN { use_ok ('Tower::VM::Memory::Helper'); };
+
+use Tower::VM::Memory::Helper qw/
+                                get_val
+                                put_val_in_4bytes
+                                /;
 
 my $mem = Tower::VM::Memory->new;
-isa_ok $mem, 'Tower::VM::Memory';
-is $mem->{size}, 2 ** 32;
 
-$mem = Tower::VM::Memory->new (
-    size => 2 ** 32,
-);
-is $mem->{size}, 2 ** 32;
-is $mem->{factor}, 2;
-is $mem->get_config_size(), 2 ** 32;
-cmp_deeply $mem->get_mem, [];
 
 run {
 
     my $block = shift;
 
-    $mem->put_val_in_4bytes($block->pos1, $block->val1);
-    cmp_deeply $mem->get_mem, [split //, $block->str1];
+    put_val_in_4bytes $mem, $block->pos, $block->val;
 
-    $mem->put_val_in_4bytes($block->pos2, $block->val2);
-    cmp_deeply $mem->get_mem, [split //, $block->str2];
-
-    cmp_deeply [$mem->read($block->pos3, $block->len3)], [split //, $block->str3];
-
-    is $mem->get_val($block->pos4, $block->len4), $block->val4;
-
-    $mem->clear;
-    cmp_deeply $mem->get_mem, [];
-
+    is get_val($mem, $block->pos, 4), $block->val;
 }
+
 
 __DATA__
 
 === TEST 1:
---- pos1: 0
---- val1: 1
---- str1: 00000001
---- pos2: 4
---- val2: -1
---- str2: 00000001ffffffff
---- pos3: 0
---- len3: 4
---- str3: 00000001
---- pos4: 0
---- len4: 4
---- val4: 1
+--- pos: 1
+--- val: 1
 
 === TEST 2:
---- pos1: 0
---- val1: -1
---- str1: ffffffff
---- pos2: 4
---- val2: -1
---- str2: ffffffffffffffff
---- pos3: 0
---- len3: 4
---- str3: ffffffff
---- pos4: 4
---- len4: 4
---- val4: -1
+--- pos: 4
+--- val: 1
 
+=== TEST 3:
+--- pos: 0
+--- val: -1
+
+=== TEST 4:
+--- pos: 18
+--- val: 9999999
+
+=== TEST 5:
+--- pos: 18
+--- val: 0
+
+=== TEST 6:
+--- pos: 18
+--- val: -9999999
