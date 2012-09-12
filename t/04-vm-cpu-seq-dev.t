@@ -3,5 +3,4 @@
 
 use lib '../lib';
 use Test::More 'no_plan';
-
-is 1, 1;
+BEGIN {use_ok 'Tower::VM::CPU::Pipe'};
