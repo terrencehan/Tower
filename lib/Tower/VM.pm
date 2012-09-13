@@ -5,7 +5,7 @@
 use strict;
 use warnings;
 
-use lib '../'; #just for syntax check, should not exist in release version
+#use lib '../'; #just for syntax check, should not exist in release version
 use Tower::VM::CPU::SEQ;
 use Tower::VM::Memory;
 
@@ -19,6 +19,9 @@ sub new{
         mem => Tower::VM::Memory->new,
     };
     return bless $self, $class;
+}
+
+sub start{
 }
 
 1;
