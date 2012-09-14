@@ -5,7 +5,6 @@
 use strict;
 use warnings;
 
-#use lib '../'; #just for syntax check, should not exist in release version
 use Tower::VM::CPU::SEQ;
 use Tower::VM::Memory;
 

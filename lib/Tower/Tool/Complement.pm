@@ -1,9 +1,15 @@
+# lib/Tower/Tool/Complement.pm
+# Copyright (c) 2012 terrencehan
+# hanliang1990@gmail.com
+
+use strict;
+use warnings;
+
 package Tower::Tool::Complement;
 
 our @ISA = qw/Exporter/;
 
-our @EXPORT = qw/to_decimal/;
-#our @EXPORT_OK = qw/to_decimal/;
+our @EXPORT_OK = qw/to_decimal/;
 
 sub to_decimal{
     my $num = hex shift;

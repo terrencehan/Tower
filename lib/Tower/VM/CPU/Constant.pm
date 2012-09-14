@@ -6,6 +6,8 @@ use strict;
 use warnings;
 package Tower::VM::CPU::Constant;
 
+require Exporter;
+
 our @ISA    = qw/Exporter/;
 our @EXPORT = qw/ $IHALT $INOP $IRRMOVL $IIRMOVL $IRMMOVL $IMRMOVL $IOPL $IJXX $ICALL $IRET $IPUSHL $IPOPL $FADDL $FSUBL $FANDL $FXORL $FJMP $FJLE $FJL $FJE $FJNE $FJGE $FJG /;
 
@@ -13,3 +15,4 @@ our ($IHALT, $INOP, $IRRMOVL, $IIRMOVL, $IRMMOVL, $IMRMOVL, $IOPL, $IJXX, $ICALL
 
 our ($FADDL, $FSUBL, $FANDL, $FXORL) = (0 .. 3); 
 our ($FJMP, $FJLE, $FJL, $FJE, $FJNE, $FJGE, $FJG) = (0 .. 6);
+1;
