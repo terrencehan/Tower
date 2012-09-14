@@ -22,7 +22,7 @@ sub clear{ shift->{buf} = []; }
 
 sub write_arr($$@){
     #arguments:
-    # $postion $len $data
+    # $postion $len(bytes) $data
     my $self = shift;
     my ($pos, $len, @data) = @_;
     my $factor = $self->{factor};
@@ -31,7 +31,7 @@ sub write_arr($$@){
 
 sub write_str($$$){
     #arguments:
-    # $postion $len $data_str
+    # $postion $len(bytes) $data_str
     my $self = shift;
     my ($pos, $len, $data_str) = @_;
     $self->write_arr($pos, $len, (split //, $data_str));
@@ -39,7 +39,7 @@ sub write_str($$$){
 
 sub read($$){
     #arguments:
-    # $postion $len $data_str
+    # $postion $len(bytes) 
     my $self        = shift;
     my ($pos, $len) = @_;
     my $factor 		= $self->{factor};
