@@ -41,7 +41,6 @@ sub new{
         }, 
         stat     => 0x00, 
         pc       => 0x00, 
-        byte_code=> "",
     };
     return bless $self, $class;
 }
@@ -75,6 +74,7 @@ sub print_res{
 
 sub get_r_with_num{
     my ($self, $num) = @_;
+    $num = 0 if(hex $num == 15);
     return $self->{res}->{$self->{res_num_to_name}->{$num}};
 }
 
