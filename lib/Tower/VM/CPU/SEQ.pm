@@ -27,10 +27,10 @@ sub new{
         valA        => 0x0,
         valB        => 0x0,
         valC        => 0x0,
-        valE        => 0x0,	
+        valE        => 0x0,
         valM        => 0x0,
-        rA 	        => 0x0,
-        rB 	        => 0x0,
+        rA          => 0x0,
+        rB          => 0x0,
         icode       => 0x0,
         ifun        => 0x0,
         %{$self}
@@ -42,26 +42,26 @@ sub new{
 sub run_next_instruction{
     my ($self, $mem) = @_;
 
-    my @six_bytes						= $mem->read($self->{pc}, 6);
+    my @six_bytes = $mem->read($self->{pc}, 6);
     for (@six_bytes) {$_ = 0 unless defined $_;}
-    my ($icode, $ifun, $rA, $rB, @valC)	= @six_bytes;
+    my ($icode, $ifun, $rA, $rB, @valC) = @six_bytes;
 
 
-    $self->{valC}	= to_decimal (join "", @valC);
-    $self->{icode}	= hex $icode;
-    $self->{ifun}	= hex $ifun;
-    $self->{rA}		= hex $rA;
-    $self->{rB}		= hex $rB;
-    $self->{valA} 	= $self->get_r_with_num($rA);
-    $self->{valB} 	= $self->get_r_with_num($rB);
+    $self->{valC}   = to_decimal (join "", @valC);
+    $self->{icode}  = hex $icode;
+    $self->{ifun}   = hex $ifun;
+    $self->{rA}     = hex $rA;
+    $self->{rB}     = hex $rB;
+    $self->{valA}   = $self->get_r_with_num($rA);
+    $self->{valB}   = $self->get_r_with_num($rB);
 
     given($self->{icode}){
         when($INOP)     {$self->handle_nop}
         when($IHALT)    {$self->handle_halt}
-        when($IRRMOVL)	{$self->handle_rrmovl}
-        when($IIRMOVL)	{$self->handle_irmovl}
-        when($IRMMOVL)	{$self->handle_rmmovl($mem)}
-        when($IMRMOVL)	{$self->handle_mrmovl($mem)}
+        when($IRRMOVL)  {$self->handle_rrmovl}
+        when($IIRMOVL)  {$self->handle_irmovl}
+        when($IRMMOVL)  {$self->handle_rmmovl($mem)}
+        when($IMRMOVL)  {$self->handle_mrmovl($mem)}
         when($IOPL)     {$self->handle_opl}
         when($IJXX)     {$self->handle_jXX($mem)}
         when($ICALL)    {$self->handle_call($mem)}
@@ -80,7 +80,7 @@ sub handle_halt{
 }
 
 #sub handle_nop{
-	#say "handle_nop{";
+    #say "handle_nop{";
 
 #}
 
@@ -228,26 +228,26 @@ sub start{
 }
 
 sub _get_hex_form{
-	my $val = shift;
-	my  $str = sprintf "%.8x", $val;
-	$str = substr($str, 8) if length($str) > 8;
-	return $str; #shortroute
-	return $val;
+    my $val = shift;
+    my  $str = sprintf "%.8x", $val;
+    $str = substr($str, 8) if length($str) > 8;
+    return $str; #shortroute
+    return $val;
 }
 
 sub print_cpu_info{
     my $self = shift;
-    say "icode:	". _get_hex_form($self->{icode});
-    say "ifun: 	". _get_hex_form($self->{ifun});
-    say "rA:	". _get_hex_form($self->{rA});
-    say "rB:	". _get_hex_form($self->{rB});
-    say "valA:	". _get_hex_form($self->{valA});
-    say "valB:	". _get_hex_form($self->{valB});
-    say "valC:	". _get_hex_form($self->{valC});
-    say "valE:	". _get_hex_form($self->{valE});
-    say "valM:	". _get_hex_form($self->{valM});
-    say "valP:	". _get_hex_form($self->{valP});
-    say "PC:	". _get_hex_form($self->{pc});
+    say "icode: ". _get_hex_form($self->{icode});
+    say "ifun:  ". _get_hex_form($self->{ifun});
+    say "rA:    ". _get_hex_form($self->{rA});
+    say "rB:    ". _get_hex_form($self->{rB});
+    say "valA:  ". _get_hex_form($self->{valA});
+    say "valB:  ". _get_hex_form($self->{valB});
+    say "valC:  ". _get_hex_form($self->{valC});
+    say "valE:  ". _get_hex_form($self->{valE});
+    say "valM:  ". _get_hex_form($self->{valM});
+    say "valP:  ". _get_hex_form($self->{valP});
+    say "PC:    ". _get_hex_form($self->{pc});
     $self->print_cc;
     $self->print_res;
 }
