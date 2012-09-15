@@ -23,7 +23,7 @@ sub get_val{
 sub _put_val{
     #internal fuction
     my ($mem, $pos, $val, $bytes)	= @_;
-    my $len = $bytes * 2;
+    my $len = $bytes;
     my $factor		= $mem->{factor};
     my $str	 = sprintf "%.${len}x", $val;
     $str	 = substr($str, $len) if length($str) > $len;
