@@ -56,18 +56,18 @@ sub run_next_instruction{
     $self->{valB} 	= $self->get_r_with_num($rB);
 
     given($self->{icode}){
-        when($INOP)		{$self->handle_nop}
-        when($IHALT)	{$self->handle_halt}
+        when($INOP)     {$self->handle_nop}
+        when($IHALT)    {$self->handle_halt}
         when($IRRMOVL)	{$self->handle_rrmovl}
         when($IIRMOVL)	{$self->handle_irmovl}
         when($IRMMOVL)	{$self->handle_rmmovl($mem)}
         when($IMRMOVL)	{$self->handle_mrmovl($mem)}
-        when($IOPL)		{$self->handle_opl}
-        when($IJXX)		{$self->handle_jXX($mem)}
-        when($ICALL)	{$self->handle_call($mem)}
-        when($IRET)		{$self->handle_ret($mem)}
-        when($IPUSHL)	{$self->handle_pushl($mem)}
-        when($IPOPL)	{$self->handle_popl($mem)}
+        when($IOPL)     {$self->handle_opl}
+        when($IJXX)     {$self->handle_jXX($mem)}
+        when($ICALL)    {$self->handle_call($mem)}
+        when($IRET)     {$self->handle_ret($mem)}
+        when($IPUSHL)   {$self->handle_pushl($mem)}
+        when($IPOPL)    {$self->handle_popl($mem)}
     }
 
 }
