@@ -23,11 +23,11 @@ sub get_val{
 sub _put_val{
     #internal fuction
     my ($mem, $pos, $val, $bytes)	= @_;
-    my $len = $bytes;
+    my $len = $bytes * 2;
     my $factor		= $mem->{factor};
-    my $str	 = sprintf "%.${len}x", $val;
+    my $str	 = sprintf "%.${t}x", $val;
     $str	 = substr($str, $len) if length($str) > $len;
-    @{$mem->{buf}}[$pos * $factor .. $pos * $factor + $len * $factor -1] = (split //, $str);
+    @{$mem->{buf}}[$pos * $factor .. $pos * $factor + $len - 1] = (split //, $str); #here, $len stand for the lenght in array
 }
 
 sub put_val_in_4bytes{
