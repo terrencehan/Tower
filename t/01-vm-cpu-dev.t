@@ -9,31 +9,27 @@ use lib '../lib';
 use Test::Base;
 use Test::More 'no_plan';
 
-BEGIN { use_ok('Tower::VM::CPU')};
-
+BEGIN { use_ok('Tower::VM::CPU') }
 
 our $cpu = Tower::VM::CPU->new;
 isa_ok $cpu, 'Tower::VM::CPU';
 
-
-
-
 run {
     my $block = shift;
 
-    $cpu->put_r_with_num($block->num1, $block->val1);
-    $cpu->put_r_with_num($block->num2, $block->val2);
+    $cpu->put_r_with_num( $block->num1, $block->val1 );
+    $cpu->put_r_with_num( $block->num2, $block->val2 );
 
-    is $cpu->get_r_with_num($block->num1), $block->val1;
-    is $cpu->get_r_with_num($block->num2), $block->val2;
+    is $cpu->get_r_with_num( $block->num1 ), $block->val1;
+    is $cpu->get_r_with_num( $block->num2 ), $block->val2;
 
-    my $str; 
+    my $str;
     open my $handle, ">", \$str;
     $cpu->print_res($handle);
     is $str, $block->res;
     close $handle;
 
-    $cpu->set_cc($block->cc_name, $block->cc_val);
+    $cpu->set_cc( $block->cc_name, $block->cc_val );
 }
 
 __DATA__

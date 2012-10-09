@@ -11,15 +11,14 @@ use Test::More 'no_plan';
 use Test::Deep;
 use Tower::VM::Memory;
 
-BEGIN { use_ok ('Tower::VM::Memory::Helper'); };
+BEGIN { use_ok('Tower::VM::Memory::Helper'); }
 
 use Tower::VM::Memory::Helper qw/
-                                get_val
-                                put_val_in_4bytes
-                                /;
+  get_val
+  put_val_in_4bytes
+  /;
 
 my $mem = Tower::VM::Memory->new;
-
 
 run {
 
@@ -27,9 +26,8 @@ run {
 
     put_val_in_4bytes $mem, $block->pos, $block->val;
 
-    is get_val($mem, $block->pos, 4), $block->val;
+    is get_val( $mem, $block->pos, 4 ), $block->val;
 }
-
 
 __DATA__
 

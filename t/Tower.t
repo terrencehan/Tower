@@ -10,7 +10,7 @@ use warnings;
 use lib '../lib';
 
 use Test::More tests => 1;
-BEGIN { use_ok('Tower') };
+BEGIN { use_ok('Tower') }
 
 #########################
 
