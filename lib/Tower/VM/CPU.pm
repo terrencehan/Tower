@@ -7,91 +7,89 @@ use warnings;
 
 package Tower::VM::CPU;
 
-
-sub new{
+sub new {
     my $class = shift;
-    my $self = {
+    my $self  = {
         res => {
-            "%eax"	=> 0x0,
-            "%ecx"	=> 0x0,
-            "%edx"	=> 0x0,
+            "%eax" => 0x0,
+            "%ecx" => 0x0,
+            "%edx" => 0x0,
 
-            "%ebx"	=> 0x0,
-            "%esi"	=> 0x0,
-            "%edi"	=> 0x0,
+            "%ebx" => 0x0,
+            "%esi" => 0x0,
+            "%edi" => 0x0,
 
-            "%esp"	=> 0x0,
-            "%ebp"	=> 0x0,
-        }, 
+            "%esp" => 0x0,
+            "%ebp" => 0x0,
+        },
         res_num_to_name => {
-            0x0	=> "%eax", 
-            0x1	=> "%ecx", 
-            0x2	=> "%edx", 
-            0x3	=> "%ebx", 
-            0x4	=> "%esp", 
-            0x5	=> "%ebp", 
-            0x6	=> "%esi", 
-            0x7	=> "%edi", 
-            0xf	=> "none", 	
+            0x0 => "%eax",
+            0x1 => "%ecx",
+            0x2 => "%edx",
+            0x3 => "%ebx",
+            0x4 => "%esp",
+            0x5 => "%ebp",
+            0x6 => "%esi",
+            0x7 => "%edi",
+            0xf => "none",
         },
         cc => {
-            "ZF" => 0x00, 
-            "SF" => 0x00, 
-            "OF" => 0x00, 
-        }, 
-        stat     => 0x00, 
-        pc       => 0x00, 
+            "ZF" => 0x00,
+            "SF" => 0x00,
+            "OF" => 0x00,
+        },
+        stat => 0x00,
+        pc   => 0x00,
     };
     return bless $self, $class;
 }
 
-sub _get_hex_form{
-	my $val = shift;
-	my  $str = sprintf "%.8x", $val;
-	$str = substr($str, 8) if length($str) > 8;
-	return $str; #shortroute
-	return $val;
+sub _get_hex_form {
+    my $val = shift;
+    my $str = sprintf "%.8x", $val;
+    $str = substr( $str, 8 ) if length($str) > 8;
+    return $str;    #shortroute
+    return $val;
 }
 
-sub _print_hash{
-    my ($handle, %hash) = @_;
-	for (keys %hash){
-		print $handle $_."->". _get_hex_form($hash{$_})."\n";
-	}
+sub _print_hash {
+    my ( $handle, %hash ) = @_;
+    for ( keys %hash ) {
+        print $handle $_ . "->" . _get_hex_form( $hash{$_} ) . "\n";
+    }
 }
 
-sub print_cc{
-    my ($self, $handle) = @_;
+sub print_cc {
+    my ( $self, $handle ) = @_;
     $handle = *STDOUT unless $handle;
-    _print_hash $handle, %{$self->{cc}};
+    _print_hash $handle, %{ $self->{cc} };
 }
 
-sub print_res{
-    my ($self, $handle) = @_;
+sub print_res {
+    my ( $self, $handle ) = @_;
     $handle = *STDOUT unless $handle;
-    _print_hash $handle, %{$self->{res}};
+    _print_hash $handle, %{ $self->{res} };
 }
 
-sub get_r_with_num{
-    my ($self, $num) = @_;
-    $num = 0 if(hex $num == 15);
-    return $self->{res}->{$self->{res_num_to_name}->{$num}};
+sub get_r_with_num {
+    my ( $self, $num ) = @_;
+    $num = 0 if ( hex $num == 15 );
+    return $self->{res}->{ $self->{res_num_to_name}->{$num} };
 }
 
-sub put_r_with_num{
-    my ($self, $num, $val) = @_;
-    $self->{res}->{$self->{res_num_to_name}->{$num}} = $val;
+sub put_r_with_num {
+    my ( $self, $num, $val ) = @_;
+    $self->{res}->{ $self->{res_num_to_name}->{$num} } = $val;
 }
 
-sub get_cc{
-    my ($self, $name) = @_;
+sub get_cc {
+    my ( $self, $name ) = @_;
     return $self->{cc}->{$name};
 }
 
-sub set_cc{
-    my ($self, $name, $val) = @_;
+sub set_cc {
+    my ( $self, $name, $val ) = @_;
     $self->{cc}->{$name} = $val;
 }
-
 
 1;

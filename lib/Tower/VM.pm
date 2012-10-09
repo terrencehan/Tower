@@ -10,20 +10,19 @@ use Tower::VM::Memory;
 
 package Tower::VM;
 
-
-sub new{
+sub new {
     my $class = shift;
-    my $self = {
+    my $self  = {
         cpu => Tower::VM::CPU::SEQ->new,
         mem => Tower::VM::Memory->new,
     };
     return bless $self, $class;
 }
 
-sub start{
-    my ($self, $byte_code) = @_;
-    $self->{mem}->write_str(0, (length $byte_code)/2, $byte_code);
-    $self->{cpu}->start($self->{mem}, 0x00);
+sub start {
+    my ( $self, $byte_code ) = @_;
+    $self->{mem}->write_str( 0, ( length $byte_code ) / 2, $byte_code );
+    $self->{cpu}->start( $self->{mem}, 0x00 );
 }
 
 1;
