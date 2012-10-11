@@ -1,2 +1,59 @@
 <autotree>
 
+program: statement_list eof
+       | <error>
+
+statement_list: statement(s)
+
+statement: halt
+         | nop
+         | rrmovl
+         | irmovl
+         | rmmovl
+         | mrmovl
+         | opl
+         | jxx
+         | call
+         | ret
+         | pushl
+         | popl
+         | label
+         | <error>
+
+eof: /^\Z/
+
+immediate: /$/ number 
+
+number: /-?\d+(?:\.\d+)?/
+
+label: identifier ':'
+
+identifier: /[A-Za-z_]\w*/
+
+comment: /#.*/
+
+halt: 'halt'
+
+nop: 'nop'
+
+ret: 'ret'
+
+rrmovl: 'rrmovl' res res
+
+irmovl: 'irmovl' immediate ',' res
+
+rmmovl: 'rmmovl' res ',' immediate '(' res ')'
+
+mrmovl: 'mrmovl' immediate '(' res ')' ',' res
+
+opl: res ',' res
+
+jxx: /je|jne|jg|jge|jl|jle/ immediate
+
+call: 'call' identifier
+
+pushl: 'pushl' res
+
+popl: 'popl' res
+
+reg: /%eax|%ecx|%edx|%ebx|%esi|%edi|%esp|%ebp/
