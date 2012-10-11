@@ -23,7 +23,7 @@ statement: halt
 
 eof: /^\Z/
 
-immediate: /$/ number 
+immediate: /\$/ number 
 
 number: /-?\d+(?:\.\d+)?/
 
@@ -42,6 +42,7 @@ ret: 'ret'
 rrmovl: 'rrmovl' reg ',' reg
 
 irmovl: 'irmovl' immediate ',' reg
+      | 'irmovl' identifier ',' reg
 
 rmmovl: 'rmmovl' reg ',' immediate '(' reg ')'
 
