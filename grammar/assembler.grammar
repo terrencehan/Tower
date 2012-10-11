@@ -18,6 +18,7 @@ statement: halt
          | pushl
          | popl
          | label
+         | comment
          | <error>
 
 eof: /^\Z/
@@ -38,22 +39,22 @@ nop: 'nop'
 
 ret: 'ret'
 
-rrmovl: 'rrmovl' res res
+rrmovl: 'rrmovl' reg ',' reg
 
-irmovl: 'irmovl' immediate ',' res
+irmovl: 'irmovl' immediate ',' reg
 
-rmmovl: 'rmmovl' res ',' immediate '(' res ')'
+rmmovl: 'rmmovl' reg ',' immediate '(' reg ')'
 
-mrmovl: 'mrmovl' immediate '(' res ')' ',' res
+mrmovl: 'mrmovl' immediate '(' reg ')' ',' reg
 
-opl: res ',' res
+opl: reg ',' reg
 
 jxx: /je|jne|jg|jge|jl|jle/ immediate
 
 call: 'call' identifier
 
-pushl: 'pushl' res
+pushl: 'pushl' reg
 
-popl: 'popl' res
+popl: 'popl' reg
 
 reg: /%eax|%ecx|%edx|%ebx|%esi|%edi|%esp|%ebp/
