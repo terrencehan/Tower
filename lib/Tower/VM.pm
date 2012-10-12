@@ -2,13 +2,13 @@
 # Copyright (c) 2012 terrencehan
 # hanliang1990@gmail.com
 
+package Tower::VM;
+
 use strict;
 use warnings;
 
 use Tower::VM::CPU::SEQ;
 use Tower::VM::Memory;
-
-package Tower::VM;
 
 sub new {
     my $class = shift;
