@@ -13,4 +13,3 @@ use Tower::Assembler qw/get_file/;
 
 BEGIN { use_ok('Tower::Assembler'); }
 
-rough_handle_src (get_file "./asumr.ys");
