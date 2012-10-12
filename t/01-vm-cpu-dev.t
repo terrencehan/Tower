@@ -6,8 +6,7 @@ use strict;
 use warnings;
 
 use lib '../lib';
-use Test::Base;
-use Test::More 'no_plan';
+use Test::Base 'no_plan';
 
 BEGIN { use_ok('Tower::VM::CPU') }
 
