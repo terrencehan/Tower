@@ -50,8 +50,16 @@ sub run_next_instruction {
     $self->{ifun}  = hex $ifun;
     $self->{rA}    = hex $rA;
     $self->{rB}    = hex $rB;
-    $self->{valA}  = $self->get_r_with_num($rA);
-    $self->{valB}  = $self->get_r_with_num($rB);
+
+# we must test $rA and $rB before passing them 
+# to get_r_with_num, because it might be a invalid 
+# value to $self->{res_num_to_name}.
+    $self->{valA} = $self->get_r_with_num($rA)
+      if $self->{rA} <= 7
+      or $self->{rA} == 15;
+    $self->{valB} = $self->get_r_with_num($rB)
+      if $self->{rA} <= 7
+      or $self->{rA} == 15;
 
     given ( $self->{icode} ) {
         when ($INOP)    { $self->handle_nop }
