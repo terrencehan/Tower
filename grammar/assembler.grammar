@@ -19,19 +19,8 @@ statement: halt
          | popl
          | label
          | comment
+         | command
          | <error>
-
-eof: /^\Z/
-
-immediate: /\$/ number 
-
-number: /-?\d+(?:\.\d+)?/
-
-label: identifier ':'
-
-identifier: /[A-Za-z_]\w*/
-
-comment: /#.*/
 
 halt: 'halt'
 
@@ -46,16 +35,35 @@ irmovl: 'irmovl' immediate ',' reg
 
 rmmovl: 'rmmovl' reg ',' immediate '(' reg ')'
 
-mrmovl: 'mrmovl' immediate '(' reg ')' ',' reg
+mrmovl: 'mrmovl' number '(' reg ')' ',' reg
 
-opl: reg ',' reg
+opl: op reg ',' reg
 
-jxx: /je|jne|jg|jge|jl|jle/ immediate
+op: /andl|xorl|addl|subl/
+
+jxx: /je|jne|jg|jge|jl|jle/ identifier
 
 call: 'call' identifier
 
 pushl: 'pushl' reg
 
 popl: 'popl' reg
+
+comment: /#.*/
+
+command: '.' /pos|byte|word|long/ hex
+       | '.align' number
+
+hex: '0x' /\w+/
+
+eof: /^\Z/
+
+immediate: /\$/ number 
+
+number: /-?\d+(?:\.\d+)?/
+
+label: identifier ':'
+
+identifier: /[A-Za-z_]\w*/
 
 reg: /%eax|%ecx|%edx|%ebx|%esi|%edi|%esp|%ebp/
