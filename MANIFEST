@@ -1,5 +1,10 @@
 Changes
+grammar/assembler.grammar
+grammar/tower.grammar
 lib/Tower.pm
+lib/Tower/Assembler.pm
+lib/Tower/Assembler/AST.pm
+lib/Tower/Assembler/Parser.pm
 lib/Tower/Tool/Complement.pm
 lib/Tower/VM.pm
 lib/Tower/VM/CPU.pm
@@ -12,6 +17,7 @@ lib/Tower/VM/Memory/Helper.pm
 Makefile.PL
 MANIFEST			This list of files
 README.md
+script/as
 t/00-vm-mem-dev.t
 t/01-vm-cpu-dev.t
 t/02-vm-dev.t
@@ -20,4 +26,6 @@ t/04-vm-cpu-seq-dev.t
 t/05-vm-cpu-pipe_m-dev.t
 t/06-vm-cpu-pipe-dev.t
 t/07-vm-mem-helper-dev.t
+t/08-assembler.t
 t/Tower.t
+temp.pl
