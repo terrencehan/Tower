@@ -52,11 +52,31 @@ nop: $/.code = { $::address++;'01' }
 
 ret: $/.code = { $::address++;'90' }
 
-rrmovl: $/.code = { $::address+=2; '20' . Tower::Assembler::emit_res($<__DIRECTIVE1__>)}
+rrmovl: $/.code = { $::address+=2; '20' . $<rA>.code . $<rB>.code}
 
 irmovl: $/.code = { $::address+=6; Tower::Assembler::emit_irmovl($/)}
 
-rmmovl: $/.code = { $::address+=6; Tower::Assembler::emit_rmmovl($/)}
+rmmovl: $/.code = { $::address+=6; '40' . $<rA>.code . $<rB>.code . $<number>.code}
+
+mrmovl: $/.code = { $::address+=6; '50' . $<rA>.code . $<rB>.code . $<number>.code}
+
+#jxx: $/.code = { $::address+=5;  }
+
+pushl: $/.code = { $::address+=2; 'a0'. $<rA>.code . 'f'}
+
+popl: $/.code = { $::address+=2; 'b0'. $<rA>.code . 'f'}
+
+call: $/.code = { $::address+=5; '80' . $<identifier>.code }
+
+identifier: $/.code = { $<__VALUE__> }
+
+rA: $/.code = { $<reg>.code }
+
+rB: $/.code = { $<reg>.code }
+
+reg: $/.code = { Tower::Assembler::emit_reg $<__VALUE__> }
+
+number: $/.code = { Tower::Assembler::emit_num $<__VALUE__> }
 
 nil: $/.code = {''}
 AttrEND
@@ -65,21 +85,27 @@ AttrEND
 
 my $address = 0;
 
-sub emit_res {
-    my @res_arr = @{ +shift };
-    join '', map { $res{ $_->{__VALUE__} } } @res_arr;
-}
+sub emit_reg { $res{ +shift }; }
 
 sub emit_irmovl {
     my $obj = shift;
     my $str;
-    if($obj->{identifier}){
+    if ( $obj->{identifier} ) {
         $str = $obj->{identifier}->{__VALUE__};
     }
-    else{
-        $str = sprintf "%.8x", $obj->{immediate}->{number}->{__VALUE__};
+    else {
+        $str = emit_num( $obj->{immediate}->{number}->{__VALUE__} );
     }
-    "30f" . $res{$obj->{reg}->{__VALUE__}} . $str;
+    "30f" . $res{ $obj->{reg}->{__VALUE__} } . $str;
+}
+
+sub emit_num {
+
+    # -1 => ffffffff
+    #  1 => 00000001
+    my $str = sprintf "%.8x", shift;
+    $str = substr( $str, 8 ) if length $str > 8;
+    $str;
 }
 
 sub handle_address {

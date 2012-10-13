@@ -28,14 +28,14 @@ nop: 'nop'
 
 ret: 'ret'
 
-rrmovl: 'rrmovl' <leftop: reg ',' reg>
+rrmovl: 'rrmovl' rA ',' rB
 
 irmovl: 'irmovl' immediate ',' reg
       | 'irmovl' identifier ',' reg
 
-rmmovl: 'rmmovl' reg ',' immediate '(' reg ')'
+rmmovl: 'rmmovl' rA ',' number '(' rB ')'
 
-mrmovl: 'mrmovl' number '(' reg ')' ',' reg
+mrmovl: 'mrmovl' number '(' rB ')' ',' rA
 
 opl: op reg ',' reg
 
@@ -45,9 +45,9 @@ jxx: /je|jne|jg|jge|jl|jle/ identifier
 
 call: 'call' identifier
 
-pushl: 'pushl' reg
+pushl: 'pushl' rA
 
-popl: 'popl' reg
+popl: 'popl' rA
 
 comment: /#.*/
 
@@ -65,5 +65,9 @@ number: /-?\d+(?:\.\d+)?/
 label: identifier ':'
 
 identifier: /[A-Za-z_]\w*/
+
+rA: reg
+
+rB: reg
 
 reg: /%eax|%ecx|%edx|%ebx|%esi|%edi|%esp|%ebp/
