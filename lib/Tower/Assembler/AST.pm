@@ -7,25 +7,39 @@ use warnings;
 
 package statement_list;
 
-sub statemeng_list {
+sub statement_list {
     my $self = shift;
-    if ( !exists $self->{statemeng_list} ) {
+    if ( !exists $self->{statement_list} ) {
         my $rlist = $self->{'statement(s)'};
         return nil->new if not $rlist;
         my @statements = @$rlist;
         my $statement  = pop @statements;
-        my $statemeng_list;
+        my $statement_list;
         if (@statements) {
-            $statemeng_list = bless { 'statement(s)' => \@statements },
+            $statement_list = bless { 'statement(s)' => \@statements },
               ref $self;
         }
         else {
-            $statemeng_list = nil->new;
+            $statement_list = nil->new;
         }
-        $self->{statemeng_list} = $statemeng_list;
+        $self->{statement_list} = $statement_list;
         $self->{statement}      = $statement;
     }
-    return $self->{statemeng_list};
+    return $self->{statement_list};
+}
+
+package statement;
+
+sub child {
+    my $self = shift;
+    while (my ($key, $val) = each %$self) {
+        next if $key =~ /[A-Z]/;
+        next if $key eq 'nil';
+        #warn "$key - $val";
+        #warn "Child of $self set to $key: $val";
+        return $val;
+    }
+    $self->{nil};
 }
 
 package nil;
