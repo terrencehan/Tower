@@ -18,6 +18,10 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
+* Parse::RecDescent
+* Language::AttributeGrammar
+
+
 
 COPYRIGHT AND LICENCE
 ------------------------
