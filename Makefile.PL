@@ -2,6 +2,8 @@ use 5.014002;
 use ExtUtils::MakeMaker;
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
+`perl -MParse::RecDescent - grammar/assembler.grammar Tower::Assembler::Parser; cp Parser.pm lib/Tower/Assembler/`;
+
 WriteMakefile(
     NAME              => 'Tower',
     VERSION_FROM      => 'lib/Tower.pm', # finds $VERSION
@@ -10,3 +12,4 @@ WriteMakefile(
       (ABSTRACT_FROM  => 'lib/Tower.pm', # retrieve abstract from module
        AUTHOR         => 'terrencehan <hanliang1990@gmail.com>') : ()),
 );
+
