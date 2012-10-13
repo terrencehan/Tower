@@ -28,7 +28,7 @@ nop: 'nop'
 
 ret: 'ret'
 
-rrmovl: 'rrmovl' reg ',' reg
+rrmovl: 'rrmovl' <leftop: reg ',' reg>
 
 irmovl: 'irmovl' immediate ',' reg
       | 'irmovl' identifier ',' reg

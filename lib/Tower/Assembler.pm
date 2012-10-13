@@ -2,15 +2,20 @@
 # Copyright (c) 2012 terrencehan
 # hanliang1990@gmail.com
 
+package Tower::Assembler;
+
 use strict;
 use warnings;
 
-package Tower::Assembler;
+use Tower::Assembler::AST;
+use Tower::Assembler::Parser;
+use Language::AttributeGrammar;
+use Data::Dump qw/dump/;
 
 our @ISA = qw/Exporter/;
 
-our @EXPORT_OK = qw/get_file/;
-our @EXPORT    = qw/rough_handle_src/;
+our @EXPORT_OK = qw//;
+our @EXPORT    = qw/translate/;
 
 my %res = (
     "%eax" => 0x0,
@@ -23,21 +28,62 @@ my %res = (
     "%edi" => 0x7,
 );
 
-my @instr =
-  qw( rrmovl cmovle cmovl cmove cmovne cmovge cmovg rmmovl mrmovl irmovl addl subl andl xorl jmp jle jl je jne jge jg call ret pushl popl .byte .word .long .pos .align halt nop iaddl leave);
+sub translate {
+    my $as_code = shift;
+    my $parser  = Tower::Assembler::Parser->new;
+    my $ptree   = $parser->program($as_code);
+    emit_byte_code($ptree);
 
-sub get_file {
-    my $file = shift;
-    open my $in, "<", $file or die "can not open this file: $file";
-    my $src = do { local $/; <$in> };
+    #$ptree;
 }
 
-sub rough_handle_src {
-    my $src = shift;
-    $src =~ s/#.*$//gm;
-    $src =~ s/^\s*\n//gm;
-    print $src;
-    print split /\n/, $src;
+sub emit_byte_code {
+    my $ptree = shift;
+    my $attr  = new Language::AttributeGrammar << 'AttrEND';
+program: $/.code = { $<statement_list>.code }
+
+statement_list: $/.code = { $<statement_list>.code . $<statement>.code}
+
+statement: $/.code = {$<child>.code}
+
+halt: $/.code = { $::address++;'00' }
+
+nop: $/.code = { $::address++;'01' }
+
+ret: $/.code = { $::address++;'90' }
+
+rrmovl: $/.code = { $::address+=2; '20' . Tower::Assembler::emit_res($<__DIRECTIVE1__>)}
+
+irmovl: $/.code = { $::address+=6; Tower::Assembler::emit_irmovl($/)}
+
+rmmovl: $/.code = { $::address+=6; Tower::Assembler::emit_rmmovl($/)}
+
+nil: $/.code = {''}
+AttrEND
+    $attr->apply( $ptree, 'code' );
+}
+
+my $address = 0;
+
+sub emit_res {
+    my @res_arr = @{ +shift };
+    join '', map { $res{ $_->{__VALUE__} } } @res_arr;
+}
+
+sub emit_irmovl {
+    my $obj = shift;
+    my $str;
+    if($obj->{identifier}){
+        $str = $obj->{identifier}->{__VALUE__};
+    }
+    else{
+        $str = sprintf "%.8x", $obj->{immediate}->{number}->{__VALUE__};
+    }
+    "30f" . $res{$obj->{reg}->{__VALUE__}} . $str;
+}
+
+sub handle_address {
+
 }
 
 1;
