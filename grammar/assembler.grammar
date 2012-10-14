@@ -37,11 +37,13 @@ rmmovl: 'rmmovl' rA ',' number '(' rB ')'
 
 mrmovl: 'mrmovl' number '(' rB ')' ',' rA
 
-opl: op reg ',' reg
+opl: op rA ',' rB
 
 op: /andl|xorl|addl|subl/
 
-jxx: /je|jne|jg|jge|jl|jle/ identifier
+jxx: jop identifier
+
+jop: /jmp|je|jne|jge|jg|jle|jl/ 
 
 call: 'call' identifier
 
