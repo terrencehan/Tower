@@ -4,6 +4,7 @@
 
 package Tower::Assembler;
 
+use 5.010;
 use strict;
 use warnings;
 
@@ -28,11 +29,20 @@ my %res = (
     "%edi" => 0x7,
 );
 
+our $address = 0;
+our %label;    #label=>address
+
 sub translate {
     my $as_code = shift;
-    my $parser  = Tower::Assembler::Parser->new;
-    my $ptree   = $parser->program($as_code);
-    emit_byte_code($ptree);
+    $address = 0;
+    my $parser     = Tower::Assembler::Parser->new;
+    my $ptree      = $parser->program($as_code);
+    my $result_str = emit_byte_code($ptree);
+    for ( keys %label ) {
+        my $hex_form = sprintf "%.8x", $label{$_};
+        $result_str =~ s/$_/$hex_form/g;
+    }
+    $result_str;
 
     #$ptree;
 }
@@ -46,29 +56,33 @@ statement_list: $/.code = { $<statement_list>.code . $<statement>.code}
 
 statement: $/.code = {$<child>.code}
 
-halt: $/.code = { $::address++;'00' }
+halt: $/.code = { Tower::Assembler::handle_address(1);'00' }
 
-nop: $/.code = { $::address++;'01' }
+nop: $/.code = { Tower::Assembler::handle_address(1);'01' }
 
-ret: $/.code = { $::address++;'90' }
+ret: $/.code = { Tower::Assembler::handle_address(1);'90' }
 
-rrmovl: $/.code = { $::address+=2; '20' . $<rA>.code . $<rB>.code}
+rrmovl: $/.code = { Tower::Assembler::handle_address(2); '20' . $<rA>.code . $<rB>.code}
 
-irmovl: $/.code = { $::address+=6; Tower::Assembler::emit_irmovl($/)}
+irmovl: $/.code = { Tower::Assembler::handle_address(6); Tower::Assembler::emit_irmovl($/)}
 
-rmmovl: $/.code = { $::address+=6; '40' . $<rA>.code . $<rB>.code . $<number>.code}
+rmmovl: $/.code = { Tower::Assembler::handle_address(6); '40' . $<rA>.code . $<rB>.code . $<number>.code}
 
-mrmovl: $/.code = { $::address+=6; '50' . $<rA>.code . $<rB>.code . $<number>.code}
+mrmovl: $/.code = { Tower::Assembler::handle_address(6); '50' . $<rA>.code . $<rB>.code . $<number>.code}
 
-jxx: $/.code = { $::address+=5; $<jop>.code . $<identifier>.code }
+jxx: $/.code = { Tower::Assembler::handle_address(5); $<jop>.code . $<identifier>.code }
 
 jop: $/.code = { Tower::Assembler::emit_jop $<__VALUE__> }
 
-pushl: $/.code = { $::address+=2; 'a0'. $<rA>.code . 'f'}
+pushl: $/.code = { Tower::Assembler::handle_address(2); 'a0'. $<rA>.code . 'f'}
 
-popl: $/.code = { $::address+=2; 'b0'. $<rA>.code . 'f'}
+popl: $/.code = { Tower::Assembler::handle_address(2); 'b0'. $<rA>.code . 'f'}
 
-call: $/.code = { $::address+=5; '80' . $<identifier>.code }
+call: $/.code = { Tower::Assembler::handle_address(5); '80' . $<identifier>.code }
+
+command: $/.code = { Tower::Assembler::emit_command($/) }
+
+label: $/.code = {Tower::Assembler::handle_label($<identifier>.code); '' }
 
 identifier: $/.code = { $<__VALUE__> }
 
@@ -76,7 +90,7 @@ rA: $/.code = { $<reg>.code }
 
 rB: $/.code = { $<reg>.code }
 
-opl: $/.code = { $::address+=2; $<op>.code . $<rA>.code . $<rB>.code }
+opl: $/.code = { Tower::Assembler::handle_address(2); $<op>.code . $<rA>.code . $<rB>.code }
 
 op: $/.code = { Tower::Assembler::emit_op($<__VALUE__>) }
 
@@ -84,12 +98,12 @@ reg: $/.code = { Tower::Assembler::emit_reg $<__VALUE__> }
 
 number: $/.code = { Tower::Assembler::emit_num $<__VALUE__> }
 
+comment: $/.code = {''}
+
 nil: $/.code = {''}
 AttrEND
     $attr->apply( $ptree, 'code' );
 }
-
-my $address = 0;
 
 sub emit_reg { $res{ +shift }; }
 
@@ -138,7 +152,47 @@ sub emit_jop {
 }
 
 sub handle_address {
+    $address += shift;
+}
 
+sub emit_command {
+    my $obj = shift;
+    if ( $obj->{__PATTERN1__} ) {    #pos|byte|word|long
+        given ( $obj->{__PATTERN1__} ) {
+            my $hex = hex $obj->{hex}->{__PATTERN1__};
+            when ('pos') {
+                $address = $hex;
+                return '';
+            }
+            $hex = sprintf "%.8x", $hex;
+            when ('byte') {
+                handle_address(1);
+                $hex = substr( $hex, ( length $hex ) - 2 ) if length $hex > 2;
+                return $hex;
+            }
+            when ('word') {
+                handle_address(2);
+                $hex = substr( $hex, ( length $hex ) - 4 ) if length $hex > 4;
+                return $hex;
+            }
+            when ('long') {
+                handle_address(4);
+                $hex = substr( $hex, 8 ) if length $hex > 8;
+                return $hex;
+            }
+        }
+    }
+    else {    #align
+        my $num         = $obj->{number}->{__VALUE__};
+        my $old_address = $address;
+        $address = $address - $address % $num + $num;
+        return "0" x ( 2 * ( $address - $old_address ) );
+    }
+}
+
+sub handle_label {
+    my $label_str = shift;
+    $label{$label_str} or $label{$label_str} = $address;
 }
 
 1;

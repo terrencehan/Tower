@@ -56,7 +56,7 @@ comment: /#.*/
 command: '.' /pos|byte|word|long/ hex
        | '.align' number
 
-hex: '0x' /\w+/
+hex: '0x' /[0-9a-fA-F]+/
 
 eof: /^\Z/
 
