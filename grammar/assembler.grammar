@@ -33,9 +33,9 @@ rrmovl: 'rrmovl' rA ',' rB
 irmovl: 'irmovl' immediate ',' reg
       | 'irmovl' identifier ',' reg
 
-rmmovl: 'rmmovl' rA ',' number '(' rB ')'
+rmmovl: 'rmmovl' rA ',' number(?) '(' rB ')'
 
-mrmovl: 'mrmovl' number '(' rB ')' ',' rA
+mrmovl: 'mrmovl' number(?) '(' rB ')' ',' rA
 
 opl: op rA ',' rB
 

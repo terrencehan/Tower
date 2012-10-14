@@ -53,7 +53,6 @@ nop
 ret
 --- byte_code: 90 
 
-=== Test4:
 --- src
 rrmovl %eax, %ebx #comment
 --- byte_code: 2003
@@ -218,7 +217,7 @@ Sum:	pushl %ebp
 	xorl %eax,%eax	
 	andl   %edx,%edx
 	je     End
-Loop:	mrmovl 0(%ecx),%esi
+Loop:	mrmovl (%ecx),%esi
 	addl %esi,%eax 
 	irmovl $4,%ebx
 	addl %ebx,%ecx 

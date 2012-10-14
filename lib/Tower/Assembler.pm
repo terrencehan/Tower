@@ -101,6 +101,8 @@ number: $/.code = { Tower::Assembler::emit_num $<__VALUE__> }
 comment: $/.code = {''}
 
 nil: $/.code = {''}
+
+eight_zero: $/.code = {'00000000'}
 AttrEND
     $attr->apply( $ptree, 'code' );
 }

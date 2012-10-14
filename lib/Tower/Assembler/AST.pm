@@ -32,9 +32,10 @@ package statement;
 
 sub child {
     my $self = shift;
-    while (my ($key, $val) = each %$self) {
+    while ( my ( $key, $val ) = each %$self ) {
         next if $key =~ /[A-Z]/;
         next if $key eq 'nil';
+
         #warn "$key - $val";
         #warn "Child of $self set to $key: $val";
         return $val;
@@ -42,7 +43,37 @@ sub child {
     $self->{nil};
 }
 
+package rmmovl;
+
+sub number {
+    my $self = shift;
+    if ( $self->{'number(?)'}->[0] ) {
+        return $self->{'number(?)'}[0];
+    }
+    else {
+        return eight_zero->new;
+    }
+}
+
+package mrmovl;
+
+sub number {
+    my $self = shift;
+    if ( $self->{'number(?)'}->[0] ) {
+        return $self->{'number(?)'}[0];
+    }
+    else {
+        return eight_zero->new;
+    }
+}
+
 package nil;
+
+sub new {
+    bless {}, shift;
+}
+
+package eight_zero;
 
 sub new {
     bless {}, shift;
