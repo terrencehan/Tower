@@ -80,7 +80,7 @@ sub run_next_instruction {
 
 sub handle_halt {
     my $self = shift;
-    $self->{stat} = 123;
+    $self->{stat} = $HLT;
 }
 
 #sub handle_nop{
@@ -232,9 +232,10 @@ sub handle_popl {
 sub start {
     my ( $self, $mem, $pc_start_position, $show_cpu_info ) = @_;
     my $count = 1;
+    $self->{stat} = $AOK;
     $pc_start_position = 0x00 unless ( defined $pc_start_position );
     $self->{pc} = $pc_start_position;
-    while ( $self->{stat} != 123 ) {
+    while ( $self->{stat} == $AOK ) {
         $self->run_next_instruction($mem);
         if ($show_cpu_info) {
             $self->print_cpu_info;

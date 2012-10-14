@@ -11,13 +11,18 @@ require Exporter;
 
 our @ISA = qw/Exporter/;
 our @EXPORT =
-  qw/ $IHALT $INOP $IRRMOVL $IIRMOVL $IRMMOVL $IMRMOVL $IOPL $IJXX $ICALL $IRET $IPUSHL $IPOPL $FADDL $FSUBL $FANDL $FXORL $FJMP $FJLE $FJL $FJE $FJNE $FJGE $FJG /;
+  qw/$AOK $HLT $ADR $INS $IHALT $INOP $IRRMOVL $IIRMOVL $IRMMOVL $IMRMOVL $IOPL $IJXX $ICALL $IRET $IPUSHL $IPOPL $FADDL $FSUBL $FANDL $FXORL $FJMP $FJLE $FJL $FJE $FJNE $FJGE $FJG /;
 
+#ecodings of instructions
 our (
     $IHALT, $INOP, $IRRMOVL, $IIRMOVL, $IRMMOVL, $IMRMOVL,
     $IOPL,  $IJXX, $ICALL,   $IRET,    $IPUSHL,  $IPOPL
 ) = ( 0 .. 0xB );
 
+#function codes for 'opl' and 'jxx'
 our ( $FADDL, $FSUBL, $FANDL, $FXORL ) = ( 0 .. 3 );
 our ( $FJMP, $FJLE, $FJL, $FJE, $FJNE, $FJGE, $FJG ) = ( 0 .. 6 );
+
+#vm status code
+our ( $AOK, $HLT, $ADR, $INS ) = ( 0 .. 3 );
 1;

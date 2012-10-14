@@ -23,7 +23,7 @@ isa_ok $seq, 'Tower::VM::CPU';
 #}
 
 $seq->handle_halt;
-is $seq->{stat}, 123, "handle_halt";
+is $seq->{stat}, $HLT, "handle_halt";
 
 for ( 0 .. 7 ) {
     $seq->{pc}   = $_;
@@ -136,7 +136,7 @@ $mem->write_str( 0, 7, "30f40000011000" );
 $seq->run_next_instruction($mem);
 is $seq->{res}->{"%esp"}, 0x110, "run_next_instruction";
 $seq->run_next_instruction($mem);
-is $seq->{stat}, 123, "run_next_instruction";
+is $seq->{stat}, $HLT, "run_next_instruction";
 $seq->{pc} = 0x00;
 $seq->run_next_instruction($mem);
 is $seq->{res}->{"%esp"}, 0x110, "run_next_instruction";
@@ -145,7 +145,7 @@ $seq = Tower::VM::CPU::SEQ->new;
 my $byte_code = join "", split "\n", do { local $/; <DATA> };
 $mem->write_str( 0, ( length $byte_code ) / 2, $byte_code );
 $seq->start( $mem, 0x00 );
-is $seq->{stat}, 123, "start";
+is $seq->{stat}, $HLT, "start";
 is $seq->{res}->{"%eax"}, 0xabcd, "start";
 
 __DATA__
