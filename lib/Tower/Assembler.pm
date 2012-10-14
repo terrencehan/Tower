@@ -60,7 +60,9 @@ rmmovl: $/.code = { $::address+=6; '40' . $<rA>.code . $<rB>.code . $<number>.co
 
 mrmovl: $/.code = { $::address+=6; '50' . $<rA>.code . $<rB>.code . $<number>.code}
 
-#jxx: $/.code = { $::address+=5;  }
+jxx: $/.code = { $::address+=5; $<jop>.code . $<identifier>.code }
+
+jop: $/.code = { Tower::Assembler::emit_jop $<__VALUE__> }
 
 pushl: $/.code = { $::address+=2; 'a0'. $<rA>.code . 'f'}
 
@@ -73,6 +75,10 @@ identifier: $/.code = { $<__VALUE__> }
 rA: $/.code = { $<reg>.code }
 
 rB: $/.code = { $<reg>.code }
+
+opl: $/.code = { $::address+=2; $<op>.code . $<rA>.code . $<rB>.code }
+
+op: $/.code = { Tower::Assembler::emit_op($<__VALUE__>) }
 
 reg: $/.code = { Tower::Assembler::emit_reg $<__VALUE__> }
 
@@ -106,6 +112,29 @@ sub emit_num {
     my $str = sprintf "%.8x", shift;
     $str = substr( $str, 8 ) if length $str > 8;
     $str;
+}
+
+sub emit_op {
+    my %operations = (
+        "addl" => 60,
+        "subl" => 61,
+        "andl" => 62,
+        "xorl" => 63,
+    );
+    $operations{ +shift };
+}
+
+sub emit_jop {
+    my %operations = (
+        "jmp" => 70,
+        "jle" => 71,
+        "jl"  => 72,
+        "je"  => 73,
+        "jne" => 74,
+        "jge" => 75,
+        "jg"  => 76,
+    );
+    $operations{ +shift };
 }
 
 sub handle_address {

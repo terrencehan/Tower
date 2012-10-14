@@ -99,3 +99,58 @@ popl %eax
 --- src
 call Main
 --- byte_code: 80Main
+
+=== Test15:
+--- src
+addl %eax, %ebx
+--- byte_code: 6003
+
+=== Test16:
+--- src
+subl %eax, %ebx
+--- byte_code: 6103
+
+=== Test17:
+--- src
+andl %eax, %ebx
+--- byte_code: 6203
+
+=== Test18:
+--- src
+xorl %ebx, %eax
+--- byte_code: 6330
+
+=== Test19:
+--- src
+jmp L1
+--- byte_code: 70L1
+
+=== Test20:
+--- src
+jle L1
+--- byte_code: 71L1
+
+=== Test21:
+--- src
+jl L1
+--- byte_code: 72L1
+
+=== Test22:
+--- src
+je L1
+--- byte_code: 73L1
+
+=== Test23:
+--- src
+jne L1
+--- byte_code: 74L1
+
+=== Test24:
+--- src
+jge L1
+--- byte_code: 75L1
+
+=== Test23:
+--- src
+jg L1
+--- byte_code: 76L1
