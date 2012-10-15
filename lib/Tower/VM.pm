@@ -22,7 +22,7 @@ sub new {
 sub start {
     my ( $self, $byte_code ) = @_;
     $self->{mem}->write_str( 0, ( length $byte_code ) / 2, $byte_code );
-    $self->{cpu}->start( $self->{mem}, 0x00 );
+    $self->{cpu}->start( $self->{mem}, 0x00, 1 );
 }
 
 1;

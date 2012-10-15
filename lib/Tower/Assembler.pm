@@ -36,7 +36,7 @@ sub translate {
     my $as_code = shift;
     $address = 0;
     my $parser     = Tower::Assembler::Parser->new;
-    my $ptree      = $parser->program($as_code);
+    my $ptree      = $parser->program($as_code) or die 'syntax error';
     my $result_str = emit_byte_code($ptree);
     for ( keys %label ) {
         my $hex_form = sprintf "%.8x", $label{$_};
