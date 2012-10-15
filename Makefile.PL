@@ -1,5 +1,11 @@
 use 5.014002;
 use ExtUtils::MakeMaker;
+
+unless(eval{require Parse::RecDescent}){
+    print "Please install Parse::RecDescent first.\n";
+    exit;
+}
+
 `perl -MParse::RecDescent - grammar/assembler.grammar Tower::Assembler::Parser; mv Parser.pm lib/Tower/Assembler/`;
 
 exit unless -s 'lib/Tower/Assembler/Parser.pm';
