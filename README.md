@@ -13,6 +13,16 @@ To install this module type the following:
     make test
     make install
 
+USAGE
+------------------------
+###Assembler
+
+    perl -Ilib script/as sample/sample0.ts
+
+###Tower compiler
+coming soon
+
+
 DEPENDENCIES
 ------------------------
 
