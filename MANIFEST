@@ -15,8 +15,8 @@ lib/Tower/VM/Memory.pm
 lib/Tower/VM/Memory/Helper.pm
 Makefile.PL
 MANIFEST			This list of files
-Parser.pm
 README.md
+sample/sample0.ts
 script/as
 t/00-vm-mem-dev.t
 t/01-vm-cpu-dev.t
