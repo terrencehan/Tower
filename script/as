@@ -1,3 +1,23 @@
 #!/usr/bin/env perl
 
 #Tower assembler
+
+use strict;
+use warnings;
+
+use Tower::Assembler;
+use Tower::VM;
+
+if ( @ARGV < 1 ) {
+    print "Usage: $0 <file>\n";
+    exit;
+}
+
+open my $in, "<", $ARGV[0] or die "can not open the file";
+
+my $src       = do { local $/; <$in> };
+my $byte_code = translate($src);
+my $vm        = Tower::VM->new;
+
+$vm->start($byte_code);
+
