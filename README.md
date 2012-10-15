@@ -2,7 +2,7 @@ Tower - An experiental programming language
 =========================
 Here is an experimental implementation of a small language named Tower. I write this just for fun, but i really wanna finish it. :)
 
-Tower consists of these components:
+###Components:
 * Tower Compiler
 * Tower Assembler
 * Tower Virtual Machine
