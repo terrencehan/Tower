@@ -19,8 +19,10 @@ USAGE
 
     perl -Ilib script/as sample/sample0.ts
 
+Now, temporarily, only the last status of Tower-VM-CPU is printed on STDOUT. Later Tower assembler will support IO instructions, or I might add IO module inside Tower VM and use interrupt to accomplish this function.
+
 ###Tower compiler
-coming soon
+coming soon.
 
 
 DEPENDENCIES
