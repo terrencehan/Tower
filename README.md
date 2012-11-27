@@ -5,7 +5,7 @@ Here is an experimental implementation of a simple assembly language simulator.
 * Tower Assembler 
 * Tower Virtual Machine 
 
-With given source, the simulator can run and print results step-by-step.
+With given source, the simulator can run and print results step-by-step. The following example comes from CSAPP.
 
         .pos 0x0 
     init:    irmovl Stack, %esp  
