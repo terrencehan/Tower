@@ -54,7 +54,7 @@ sub _get_hex_form {
 
 sub _print_hash {
     my ( $handle, %hash ) = @_;
-    for ( keys %hash ) {
+    for ( sort keys %hash ) {
         print $handle $_ . "->" . _get_hex_form( $hash{$_} ) . "\n";
     }
 }
